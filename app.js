@@ -85,6 +85,13 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+  res.locals.currUser = null;
+  res.locals.success = "";
+  res.locals.error = "";
+  next();
+});
+
 // app.get("/demouser", async (req, res) => {
 //     let fakeUser = new User({
 //         email: "student@gmail.com",
