@@ -68,11 +68,24 @@ const sessionOptions = {
     },
 };
 
-app.use(session(sessionOptions));
+//app.use(session(sessionOptions));
+//const session = require("express-session");
+
+app.use(session({
+  secret: "mysupersecretcode",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    secure: false
+  }
+}));
 app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+
 passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser(User.serializeUser());
@@ -85,12 +98,12 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use((req, res, next) => {
-  res.locals.currUser = null;
-  res.locals.success = "";
-  res.locals.error = "";
-  next();
-});
+// app.use((req, res, next) => {
+//   res.locals.currUser = null;
+//   res.locals.success = "";
+//   res.locals.error = "";
+//   next();
+// });
 
 // app.get("/demouser", async (req, res) => {
 //     let fakeUser = new User({
@@ -110,20 +123,20 @@ app.use((req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));
 });
 
-app.use((req, res, next) => {
-    res.locals.currUser = null;
-    next();
-});
+// app.use((req, res, next) => {
+//     res.locals.currUser = null;
+//     next();
+// });
 
 app.use((err, req, res, next) => {
     let {statusCode=500, message="something went wrong!"} = err;
     res.status(statusCode).render("error.ejs", { message });
     //res.status(statusCode).send(message);
 });
-app.use((req, res, next) => {
-  res.locals.success = "";
-  next();
-});
+// app.use((req, res, next) => {
+//   res.locals.success = "";
+//   next();
+// });
 
 app.listen(8080, () => {
     console.log("server is listening to port 8080");
